@@ -1,0 +1,412 @@
+/* ==========================================================================
+   ONLINE EXAMINATION SYSTEM - GLOBAL STYLESHEET
+   Pastel Lavender & Purple Modern SaaS Theme
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    /* Color Palette */
+    --primary-purple: #8B78C8;
+    --deep-purple: #6955A8;
+    --lavender: #EAE4FA;
+    --light-lavender: #F4F0FC;
+    --bg-color: #F8F7FC;
+    --white: #FFFFFF;
+    --soft-pink: #F8E8F1;
+    --soft-pink-dark: #D45B94;
+    --soft-blue: #E7EFFB;
+    --soft-blue-dark: #3F72AF;
+    --soft-mint: #E5F3EC;
+    --soft-mint-dark: #2D8A5E;
+    --soft-yellow: #FFF3D9;
+    --soft-yellow-dark: #B8860B;
+    --text-main: #302B40;
+    --text-secondary: #858095;
+    --border-color: #ECE8F3;
+
+    /* Shadows & Radii */
+    --shadow-subtle: 0 4px 20px rgba(105, 85, 168, 0.06);
+    --shadow-hover: 0 8px 30px rgba(105, 85, 168, 0.12);
+    --shadow-card: 0 2px 12px rgba(105, 85, 168, 0.04);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+    --radius-pill: 50px;
+
+    /* Transitions */
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--deep-purple);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary-purple);
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+    font-weight: 600;
+    font-size: 0.925rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary-purple {
+    background-color: var(--primary-purple);
+    color: #FFFFFF;
+    border-color: var(--primary-purple);
+    box-shadow: 0 4px 14px rgba(139, 120, 200, 0.3);
+}
+
+.btn-primary-purple:hover,
+.btn-primary-purple:focus {
+    background-color: var(--deep-purple);
+    border-color: var(--deep-purple);
+    color: #FFFFFF;
+    box-shadow: 0 6px 20px rgba(105, 85, 168, 0.4);
+}
+
+.btn-soft-purple {
+    background-color: var(--light-lavender);
+    color: var(--deep-purple);
+    border-color: transparent;
+}
+
+.btn-soft-purple:hover {
+    background-color: var(--lavender);
+    color: var(--deep-purple);
+}
+
+.btn-outline-purple {
+    background-color: transparent;
+    color: var(--deep-purple);
+    border-color: var(--border-color);
+}
+
+.btn-outline-purple:hover {
+    background-color: var(--light-lavender);
+    border-color: var(--lavender);
+    color: var(--deep-purple);
+}
+
+.btn-soft-mint {
+    background-color: var(--soft-mint);
+    color: var(--soft-mint-dark);
+}
+
+.btn-soft-mint:hover {
+    background-color: #d4ebd9;
+    color: var(--soft-mint-dark);
+}
+
+.btn-soft-danger {
+    background-color: var(--soft-pink);
+    color: var(--soft-pink-dark);
+}
+
+.btn-soft-danger:hover {
+    background-color: #f7d2e3;
+    color: var(--soft-pink-dark);
+}
+
+.btn-pill {
+    border-radius: var(--radius-pill);
+}
+
+/* ==========================================================================
+   BADGES & PILLS
+   ========================================================================== */
+.badge-pill {
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.775rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    letter-spacing: 0.02em;
+}
+
+.badge-soft-purple {
+    background-color: var(--lavender);
+    color: var(--deep-purple);
+}
+
+.badge-soft-mint {
+    background-color: var(--soft-mint);
+    color: var(--soft-mint-dark);
+}
+
+.badge-soft-pink {
+    background-color: var(--soft-pink);
+    color: var(--soft-pink-dark);
+}
+
+.badge-soft-blue {
+    background-color: var(--soft-blue);
+    color: var(--soft-blue-dark);
+}
+
+.badge-soft-yellow {
+    background-color: var(--soft-yellow);
+    color: var(--soft-yellow-dark);
+}
+
+/* ==========================================================================
+   ICON CONTAINERS
+   ========================================================================== */
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+}
+
+.icon-box-sm {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.icon-box-lg {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    font-size: 1.75rem;
+}
+
+.icon-box-purple {
+    background-color: var(--lavender);
+    color: var(--deep-purple);
+}
+
+.icon-box-mint {
+    background-color: var(--soft-mint);
+    color: var(--soft-mint-dark);
+}
+
+.icon-box-blue {
+    background-color: var(--soft-blue);
+    color: var(--soft-blue-dark);
+}
+
+.icon-box-yellow {
+    background-color: var(--soft-yellow);
+    color: var(--soft-yellow-dark);
+}
+
+.icon-box-pink {
+    background-color: var(--soft-pink);
+    color: var(--soft-pink-dark);
+}
+
+/* ==========================================================================
+   CARDS & CONTAINERS
+   ========================================================================== */
+.card-custom {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-subtle);
+    transition: var(--transition-smooth);
+    overflow: hidden;
+}
+
+.card-custom:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.card-header-custom {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-body-custom {
+    padding: 1.5rem;
+}
+
+/* Pastel Stat Cards */
+.stat-card {
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-card-purple {
+    background-color: #FAF8FE;
+    border-color: #E6DEF7;
+}
+
+.stat-card-mint {
+    background-color: #F6FCF8;
+    border-color: #DBEFE4;
+}
+
+.stat-card-blue {
+    background-color: #F7FAFE;
+    border-color: #DEE8F8;
+}
+
+.stat-card-yellow {
+    background-color: #FFFDF7;
+    border-color: #FAEECF;
+}
+
+.stat-card-pink {
+    background-color: #FEF8FA;
+    border-color: #F8DFEB;
+}
+
+/* ==========================================================================
+   FORMS & INPUTS
+   ========================================================================== */
+.form-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    margin-bottom: 0.45rem;
+}
+
+.form-control,
+.form-select {
+    background-color: #FAF9FD;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    transition: var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #FFFFFF;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 4px rgba(139, 120, 200, 0.15);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #A9A4B8;
+}
+
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
+.table-custom {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--text-main);
+}
+
+.table-custom th {
+    background-color: var(--light-lavender);
+    color: var(--deep-purple);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-custom td {
+    padding: 1.1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.925rem;
+}
+
+.table-custom tr:last-child td {
+    border-bottom: none;
+}
+
+.table-custom tbody tr {
+    transition: var(--transition-fast);
+}
+
+.table-custom tbody tr:hover {
+    background-color: #FBF9FE;
+}
+
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
+.modal-content {
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(48, 43, 64, 0.12);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+}

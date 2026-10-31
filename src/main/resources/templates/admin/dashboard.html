@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Online Examination System</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard', 'ADMIN')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('System Overview', 'Real-time platform statistics & management')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Stats Widgets Grid -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-blue">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Total Students</span>
+                            <h2 class="fw-bold my-1" th:text="${totalStudents}">0</h2>
+                            <span class="badge badge-pill badge-soft-blue"><i class="bi bi-people"></i> Enrolled</span>
+                        </div>
+                        <div class="icon-box icon-box-blue">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-mint">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Total Teachers</span>
+                            <h2 class="fw-bold my-1" th:text="${totalTeachers}">0</h2>
+                            <span class="badge badge-pill badge-soft-mint"><i class="bi bi-person-badge"></i> Faculty</span>
+                        </div>
+                        <div class="icon-box icon-box-mint">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-purple">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Total Examinations</span>
+                            <h2 class="fw-bold my-1" th:text="${totalExams}">0</h2>
+                            <span class="badge badge-pill badge-soft-purple"><i class="bi bi-check2-circle"></i> Active</span>
+                        </div>
+                        <div class="icon-box icon-box-purple">
+                            <i class="bi bi-card-checklist"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-yellow">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Total Subjects</span>
+                            <h2 class="fw-bold my-1" th:text="${totalSubjects}">0</h2>
+                            <span class="badge badge-pill badge-soft-yellow"><i class="bi bi-book"></i> Curriculum</span>
+                        </div>
+                        <div class="icon-box icon-box-yellow">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Tables Row -->
+            <div class="row g-4">
+                <!-- Recent Examinations -->
+                <div class="col-lg-7">
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <div>
+                                <h5 class="fw-bold mb-0">Recent Examinations</h5>
+                                <span class="small text-secondary">Latest exams configured by faculty</span>
+                            </div>
+                            <a th:href="@{/admin/exams}" class="btn btn-outline-purple btn-sm">
+                                View All <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Exam Title</th>
+                                        <th>Subject</th>
+                                        <th>Teacher</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="exam : ${recentExams}">
+                                        <td class="fw-bold" th:text="${exam.title}">Exam Title</td>
+                                        <td th:text="${exam.subject.subjectName}">Subject</td>
+                                        <td th:text="${exam.teacher.name}">Teacher</td>
+                                        <td><span th:text="${exam.duration}">30</span> mins</td>
+                                        <td>
+                                            <span class="badge badge-pill"
+                                                  th:classappend="${exam.status == 'PUBLISHED' ? 'badge-soft-mint' : 'badge-soft-yellow'}"
+                                                  th:text="${exam.status}">PUBLISHED</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(recentExams)}">
+                                        <td colspan="5" class="text-center py-4 text-muted">No examinations found.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Registrations -->
+                <div class="col-lg-5">
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <div>
+                                <h5 class="fw-bold mb-0">Recent User Registrations</h5>
+                                <span class="small text-secondary">Newly added students and teachers</span>
+                            </div>
+                            <a th:href="@{/admin/students}" class="btn btn-outline-purple btn-sm">
+                                Manage <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Role</th>
+                                        <th>Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="u : ${recentUsers}">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="user-avatar-initials" style="width: 32px; height: 32px; font-size: 0.8rem;"
+                                                     th:text="${#strings.substring(u.name, 0, 1)}">U</div>
+                                                <div>
+                                                    <div class="fw-bold text-dark small" th:text="${u.name}">User Name</div>
+                                                    <div class="text-muted" style="font-size: 0.75rem;" th:text="${u.email}">user@email.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill"
+                                                  th:classappend="${u.role.name() == 'ADMIN' ? 'badge-soft-purple' : (u.role.name() == 'TEACHER' ? 'badge-soft-mint' : 'badge-soft-blue')}"
+                                                  th:text="${u.role}">ROLE</span>
+                                        </td>
+                                        <td class="small text-secondary"
+                                            th:text="${#temporals.format(u.createdAt, 'dd MMM yyyy')}">Date</td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(recentUsers)}">
+                                        <td colspan="3" class="text-center py-4 text-muted">No recent registrations.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

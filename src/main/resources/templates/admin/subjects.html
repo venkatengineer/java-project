@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subjects - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('subjects', 'ADMIN')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Curriculum Subjects', 'Course subjects, categories & exam catalog')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Toolbar -->
+            <div class="card-custom mb-4 p-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-0">Course Curriculum Subjects</h5>
+                    <span class="small text-secondary" th:text="${#lists.size(subjects) + ' total subjects configured'}">0 subjects</span>
+                </div>
+                <button type="button" class="btn btn-primary-purple" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                    <i class="bi bi-plus-circle-fill"></i> Add New Subject
+                </button>
+            </div>
+
+            <!-- Subjects Grid / Cards -->
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="subject : ${subjects}">
+                    <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="icon-box icon-box-yellow">
+                                    <i class="bi bi-journal-bookmark-fill"></i>
+                                </div>
+                                <span class="badge badge-pill badge-soft-purple"
+                                      th:text="${(subject.exams != null ? #lists.size(subject.exams) : 0) + ' Exams'}">0 Exams</span>
+                            </div>
+                            <h5 class="fw-bold mb-2 text-dark" th:text="${subject.subjectName}">Subject Name</h5>
+                            <p class="text-secondary small mb-4" th:text="${subject.description != null ? subject.description : 'No description provided.'}">
+                                Subject description...
+                            </p>
+                        </div>
+                        <div class="d-flex gap-2 pt-3 border-top" style="border-color: var(--border-color) !important;">
+                            <button type="button" class="btn btn-soft-purple btn-sm flex-fill"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="'#editSubjectModal-' + ${subject.id}">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <button type="button" class="btn btn-soft-danger btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                    th:data-action-url="'/admin/subjects/delete/' + ${subject.id}"
+                                    th:data-item-name="${subject.subjectName}">
+                                <i class="bi bi-trash3"></i> Delete
+                            </button>
+                        </div>
+
+                        <!-- Edit Subject Modal -->
+                        <div class="modal fade text-start" th:id="'editSubjectModal-' + ${subject.id}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form th:action="@{'/admin/subjects/edit/' + ${subject.id}}" method="post">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold">Edit Subject</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Subject Name</label>
+                                                <input type="text" name="subjectName" class="form-control" th:value="${subject.subjectName}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                <textarea name="description" class="form-control" rows="3" th:text="${subject.description}"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary-purple">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12" th:if="${#lists.isEmpty(subjects)}">
+                    <div class="card-custom p-5 text-center text-muted">
+                        <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
+                        No subjects found. Click "Add New Subject" to create one.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Subject Modal -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form th:action="@{/admin/subjects/add}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addSubjectModalLabel">Add New Subject</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Subject Name</label>
+                        <input type="text" name="subjectName" class="form-control" placeholder="e.g. Data Structures & Algorithms" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subject Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Brief outline of syllabus covered..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-purple">Create Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

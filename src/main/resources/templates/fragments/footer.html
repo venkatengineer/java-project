@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="footer">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Generic Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title d-flex align-items-center gap-2 text-danger" id="deleteModalLabel">
+                        <i class="bi bi-exclamation-octagon-fill"></i> Confirm Deletion
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="mb-1 text-dark">Are you sure you want to delete <strong id="deleteItemName" class="text-danger">this record</strong>?</p>
+                    <p class="small text-muted mb-0">This action cannot be undone and will permanently remove associated records from the system.</p>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteConfirmForm" method="post" action="">
+                        <button type="submit" class="btn btn-soft-danger">
+                            <i class="bi bi-trash3"></i> Delete Permanently
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Common JavaScript Files -->
+    <script th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions - Teacher Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('exams', 'TEACHER')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Question Bank Management', 'MCQ authoring, options & answer keys')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Exam Overview Header Card -->
+            <div class="card-custom mb-4 p-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                            <span class="badge badge-pill badge-soft-mint" th:text="${exam.status}">PUBLISHED</span>
+                        </div>
+                        <h4 class="fw-bold mb-1 text-dark" th:text="${exam.title}">Exam Title</h4>
+                        <div class="small text-secondary d-flex gap-3 flex-wrap">
+                            <span><i class="bi bi-clock"></i> Duration: <strong th:text="${exam.duration + ' mins'}">30 mins</strong></span>
+                            <span><i class="bi bi-patch-question"></i> Questions: <strong th:text="${#lists.size(questions)}">0</strong></span>
+                            <span><i class="bi bi-award"></i> Total Marks: <strong th:text="${exam.totalMarks}">10</strong></span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/teacher/exams}" class="btn btn-outline-purple btn-sm">
+                            <i class="bi bi-arrow-left"></i> My Exams
+                        </a>
+                        <button type="button" class="btn btn-primary-purple btn-sm" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
+                            <i class="bi bi-plus-circle-fill"></i> Add Question
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions List -->
+            <div class="row g-3">
+                <div class="col-12" th:each="q, iter : ${questions}">
+                    <div class="card-custom p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom" style="border-color: var(--border-color) !important;">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge badge-pill badge-soft-purple fs-6" th:text="'Q' + ${iter.count}">Q1</span>
+                                <span class="badge badge-pill badge-soft-yellow" th:text="${q.marks + ' Mark(s)'}">1 Mark</span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-soft-purple btn-sm py-1 px-3"
+                                        data-bs-toggle="modal"
+                                        th:data-bs-target="'#editQuestionModal-' + ${q.id}">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-soft-danger btn-sm py-1 px-3"
+                                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                        th:data-action-url="'/teacher/questions/' + ${q.id} + '/delete'"
+                                        th:data-item-name="'Question ' + ${iter.count}">
+                                    <i class="bi bi-trash3"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-dark mb-3" th:text="${q.questionText}">Question text goes here</h6>
+
+                        <div class="row g-2 mb-3 small">
+                            <div class="col-md-6">
+                                <div class="p-2 rounded-3 border d-flex align-items-center gap-2"
+                                     th:style="${q.correctAnswer == 'A' ? 'background-color: var(--soft-mint); border-color: #8FD8AF !important;' : 'background-color: #FAF9FE;'}">
+                                    <span class="badge bg-white text-dark border fw-bold">A</span>
+                                    <span th:text="${q.optionA}">Option A</span>
+                                    <i th:if="${q.correctAnswer == 'A'}" class="bi bi-check-circle-fill text-success ms-auto"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-2 rounded-3 border d-flex align-items-center gap-2"
+                                     th:style="${q.correctAnswer == 'B' ? 'background-color: var(--soft-mint); border-color: #8FD8AF !important;' : 'background-color: #FAF9FE;'}">
+                                    <span class="badge bg-white text-dark border fw-bold">B</span>
+                                    <span th:text="${q.optionB}">Option B</span>
+                                    <i th:if="${q.correctAnswer == 'B'}" class="bi bi-check-circle-fill text-success ms-auto"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-2 rounded-3 border d-flex align-items-center gap-2"
+                                     th:style="${q.correctAnswer == 'C' ? 'background-color: var(--soft-mint); border-color: #8FD8AF !important;' : 'background-color: #FAF9FE;'}">
+                                    <span class="badge bg-white text-dark border fw-bold">C</span>
+                                    <span th:text="${q.optionC}">Option C</span>
+                                    <i th:if="${q.correctAnswer == 'C'}" class="bi bi-check-circle-fill text-success ms-auto"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-2 rounded-3 border d-flex align-items-center gap-2"
+                                     th:style="${q.correctAnswer == 'D' ? 'background-color: var(--soft-mint); border-color: #8FD8AF !important;' : 'background-color: #FAF9FE;'}">
+                                    <span class="badge bg-white text-dark border fw-bold">D</span>
+                                    <span th:text="${q.optionD}">Option D</span>
+                                    <i th:if="${q.correctAnswer == 'D'}" class="bi bi-check-circle-fill text-success ms-auto"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 small text-secondary">
+                            <span>Correct Answer:</span>
+                            <span class="badge badge-pill badge-soft-mint fw-bold" th:text="'Option ' + ${q.correctAnswer}">Option A</span>
+                        </div>
+
+                        <!-- Edit Question Modal -->
+                        <div class="modal fade text-start" th:id="'editQuestionModal-' + ${q.id}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <form th:action="@{'/teacher/questions/' + ${q.id} + '/edit'}" method="post">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" th:text="'Edit Question ' + ${iter.count}">Edit Question</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Question Text <span class="text-danger">*</span></label>
+                                                <textarea name="questionText" class="form-control" rows="3" required th:text="${q.questionText}"></textarea>
+                                            </div>
+                                            <div class="row g-3 mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Option A <span class="text-danger">*</span></label>
+                                                    <input type="text" name="optionA" class="form-control" th:value="${q.optionA}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Option B <span class="text-danger">*</span></label>
+                                                    <input type="text" name="optionB" class="form-control" th:value="${q.optionB}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Option C <span class="text-danger">*</span></label>
+                                                    <input type="text" name="optionC" class="form-control" th:value="${q.optionC}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Option D <span class="text-danger">*</span></label>
+                                                    <input type="text" name="optionD" class="form-control" th:value="${q.optionD}" required>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Correct Option <span class="text-danger">*</span></label>
+                                                    <select name="correctAnswer" class="form-select" required>
+                                                        <option value="A" th:selected="${q.correctAnswer == 'A'}">Option A</option>
+                                                        <option value="B" th:selected="${q.correctAnswer == 'B'}">Option B</option>
+                                                        <option value="C" th:selected="${q.correctAnswer == 'C'}">Option C</option>
+                                                        <option value="D" th:selected="${q.correctAnswer == 'D'}">Option D</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Assigned Marks <span class="text-danger">*</span></label>
+                                                    <input type="number" name="marks" class="form-control" th:value="${q.marks}" min="1" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary-purple">Update Question</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12" th:if="${#lists.isEmpty(questions)}">
+                    <div class="card-custom p-5 text-center text-muted">
+                        <i class="bi bi-question-circle fs-2 d-block mb-2"></i>
+                        No questions have been added yet to this exam.
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-primary-purple" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
+                                <i class="bi bi-plus-circle-fill"></i> Add First Question
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Question Modal -->
+<div class="modal fade" id="addQuestionModal" tabindex="-1" aria-labelledby="addQuestionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form th:action="@{'/teacher/exams/' + ${exam.id} + '/questions/add'}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addQuestionModalLabel">Add Multiple Choice Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Question Text <span class="text-danger">*</span></label>
+                        <textarea name="questionText" class="form-control" rows="3" placeholder="Enter the complete question prompt..." required></textarea>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Option A <span class="text-danger">*</span></label>
+                            <input type="text" name="optionA" class="form-control" placeholder="Choice A description" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Option B <span class="text-danger">*</span></label>
+                            <input type="text" name="optionB" class="form-control" placeholder="Choice B description" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Option C <span class="text-danger">*</span></label>
+                            <input type="text" name="optionC" class="form-control" placeholder="Choice C description" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Option D <span class="text-danger">*</span></label>
+                            <input type="text" name="optionD" class="form-control" placeholder="Choice D description" required>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Correct Option <span class="text-danger">*</span></label>
+                            <select name="correctAnswer" class="form-select" required>
+                                <option value="">-- Select Correct Option --</option>
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Assigned Marks <span class="text-danger">*</span></label>
+                            <input type="number" name="marks" class="form-control" value="1" min="1" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-purple">Add Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

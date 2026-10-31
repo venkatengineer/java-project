@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Examinations - Teacher Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('exams', 'TEACHER')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('My Examinations', 'Examinations authored & managed by you')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Toolbar -->
+            <div class="card-custom mb-4 p-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-0">Authored Assessments</h5>
+                    <span class="small text-secondary" th:text="${#lists.size(exams) + ' examinations found'}">0 examinations</span>
+                </div>
+                <a th:href="@{/teacher/exams/create}" class="btn btn-primary-purple">
+                    <i class="bi bi-plus-circle-fill"></i> Create New Examination
+                </a>
+            </div>
+
+            <!-- Examinations Table -->
+            <div class="card-custom">
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Exam Details</th>
+                                <th>Subject</th>
+                                <th>Duration</th>
+                                <th>Questions</th>
+                                <th>Total Marks</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="exam : ${exams}">
+                                <td>
+                                    <div class="fw-bold text-dark" th:text="${exam.title}">Exam Title</div>
+                                    <small class="text-secondary" th:text="${#strings.abbreviate(exam.description, 60)}">Description</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold" th:text="${exam.duration + ' mins'}">20 mins</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill badge-soft-blue"
+                                          th:text="${(exam.questions != null ? #lists.size(exam.questions) : 0) + ' Qs'}">0 Qs</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark" th:text="${exam.totalMarks}">10</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill"
+                                          th:classappend="${exam.status == 'PUBLISHED' ? 'badge-soft-mint' : 'badge-soft-yellow'}"
+                                          th:text="${exam.status}">PUBLISHED</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{'/teacher/exams/' + ${exam.id} + '/questions'}" class="btn btn-soft-purple btn-sm">
+                                        <i class="bi bi-list-check"></i> Questions
+                                    </a>
+                                    <a th:href="@{'/teacher/exams/' + ${exam.id} + '/edit'}" class="btn btn-outline-purple btn-sm ms-1">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <button type="button" class="btn btn-soft-danger btn-sm ms-1"
+                                            data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                            th:data-action-url="'/teacher/exams/' + ${exam.id} + '/delete'"
+                                            th:data-item-name="${exam.title}">
+                                        <i class="bi bi-trash3"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(exams)}">
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
+                                    You have not created any examinations yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

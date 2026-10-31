@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Examinations - Student Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('exams', 'STUDENT')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Available Examinations', 'Browse and attend scheduled tests & assessments')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Header Card -->
+            <div class="card-custom mb-4 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h5 class="fw-bold mb-1 text-dark">Examination Catalog</h5>
+                    <span class="small text-secondary" th:text="${#lists.size(exams) + ' examinations currently published'}">0 exams</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge badge-pill badge-soft-purple"><i class="bi bi-clock"></i> Timed Sessions</span>
+                    <span class="badge badge-pill badge-soft-mint"><i class="bi bi-shield-check"></i> Instant Evaluation</span>
+                </div>
+            </div>
+
+            <!-- Exam Cards Grid -->
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="exam : ${exams}">
+                    <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between" style="border-color: #E6DEF7;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                                <span class="badge badge-pill badge-soft-yellow" th:text="${exam.totalMarks + ' Marks'}">10 Marks</span>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-2" th:text="${exam.title}">Exam Title</h5>
+                            <p class="text-secondary small mb-3" th:text="${exam.description != null ? exam.description : 'Standard multiple-choice curriculum examination.'}">
+                                Exam instructions...
+                            </p>
+                            <div class="p-3 bg-light rounded-3 small text-secondary mb-4">
+                                <div class="mb-1"><i class="bi bi-person-badge"></i> Examiner: <strong class="text-dark" th:text="${exam.teacher.name}">Teacher</strong></div>
+                                <div class="mb-1"><i class="bi bi-stopwatch"></i> Duration: <strong class="text-dark" th:text="${exam.duration + ' minutes'}">30 minutes</strong></div>
+                                <div><i class="bi bi-patch-question"></i> Questions: <strong class="text-dark" th:text="${exam.questionCount + ' MCQs'}">10 MCQs</strong></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Check if student already attempted -->
+                            <div th:if="${attemptedMap != null && attemptedMap.containsKey(exam.id)}">
+                                <a th:href="@{'/student/results/' + ${attemptedMap.get(exam.id).id}}" class="btn btn-soft-mint w-100">
+                                    <i class="bi bi-check-circle-fill"></i> View Result (<span th:text="${attemptedMap.get(exam.id).score + '/' + exam.totalMarks}">0/10</span>)
+                                </a>
+                            </div>
+                            <div th:unless="${attemptedMap != null && attemptedMap.containsKey(exam.id)}">
+                                <a th:href="@{'/student/exams/' + ${exam.id} + '/instructions'}" class="btn btn-primary-purple w-100">
+                                    <i class="bi bi-play-circle-fill"></i> Read Instructions & Begin
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12" th:if="${#lists.isEmpty(exams)}">
+                    <div class="card-custom p-5 text-center text-muted">
+                        <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
+                        No active examinations available right now. Please check back later.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

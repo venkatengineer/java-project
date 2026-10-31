@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${exam.title + ' - Examination Room'}">Examination Room</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/examination.css}">
+</head>
+<body style="background-color: var(--bg-color);">
+
+<!-- Distraction-free Header Bar -->
+<div class="exam-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <div class="brand-logo-icon" style="width: 38px; height: 38px; font-size: 1.15rem;">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-0 text-dark" th:text="${exam.title}">Exam Title</h6>
+                <span class="small text-secondary" th:text="${exam.subject.subjectName}">Subject Name</span>
+            </div>
+        </div>
+
+        <!-- Live Countdown Timer -->
+        <div class="d-flex align-items-center gap-3">
+            <div id="timerBox" class="exam-timer-box">
+                <i class="bi bi-clock-history"></i>
+                <span id="timerDisplay">--:--:--</span>
+            </div>
+
+            <button type="button" class="btn btn-primary-purple btn-sm" data-bs-toggle="modal" data-bs-target="#submitConfirmModal">
+                <i class="bi bi-send-check"></i> Submit Exam
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Exam Room Workspace -->
+<div class="container py-4">
+    <!-- Form containing all radio inputs -->
+    <form id="examForm" th:action="@{'/student/exams/' + ${exam.id} + '/submit'}" method="post">
+        <div class="row g-4">
+            <!-- Questions Column -->
+            <div class="col-lg-8">
+                <!-- Question Cards (rendered one by one via JS navigation) -->
+                <div th:each="q, iter : ${questions}"
+                     class="question-card-item d-none"
+                     th:data-index="${iter.index}">
+
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge badge-pill badge-soft-purple fs-6"
+                                      th:text="'Question ' + ${iter.count} + ' of ' + ${totalQuestions}">Question 1 of 10</span>
+                                <span class="badge badge-pill badge-soft-yellow"
+                                      th:text="${q.marks + ' Mark(s)'}">1 Mark</span>
+                            </div>
+                            <span class="text-secondary small">Single choice MCQ</span>
+                        </div>
+
+                        <!-- Question Text -->
+                        <div class="question-text" th:text="${q.questionText}">
+                            What is the primary feature of Object-Oriented Programming?
+                        </div>
+
+                        <!-- 4 MCQ Options -->
+                        <div class="mcq-options-list">
+                            <!-- Option A -->
+                            <label class="option-item">
+                                <input type="radio" th:name="'question_' + ${q.id}" value="A">
+                                <span class="option-letter-badge">A</span>
+                                <span class="option-text" th:text="${q.optionA}">Option A text</span>
+                            </label>
+
+                            <!-- Option B -->
+                            <label class="option-item">
+                                <input type="radio" th:name="'question_' + ${q.id}" value="B">
+                                <span class="option-letter-badge">B</span>
+                                <span class="option-text" th:text="${q.optionB}">Option B text</span>
+                            </label>
+
+                            <!-- Option C -->
+                            <label class="option-item">
+                                <input type="radio" th:name="'question_' + ${q.id}" value="C">
+                                <span class="option-letter-badge">C</span>
+                                <span class="option-text" th:text="${q.optionC}">Option C text</span>
+                            </label>
+
+                            <!-- Option D -->
+                            <label class="option-item">
+                                <input type="radio" th:name="'question_' + ${q.id}" value="D">
+                                <span class="option-letter-badge">D</span>
+                                <span class="option-text" th:text="${q.optionD}">Option D text</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation Control Bar -->
+                <div class="card-custom p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <button type="button" id="prevQuestionBtn" class="btn btn-outline-purple">
+                        <i class="bi bi-chevron-left"></i> Previous
+                    </button>
+                    <button type="button" id="clearAnswerBtn" class="btn btn-soft-danger btn-sm">
+                        <i class="bi bi-eraser"></i> Clear Choice
+                    </button>
+                    <button type="button" id="nextQuestionBtn" class="btn btn-primary-purple">
+                        Next Question <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Side Question Navigation Palette -->
+            <div class="col-lg-4">
+                <div class="palette-card">
+                    <h6 class="fw-bold text-dark mb-2 d-flex justify-content-between align-items-center">
+                        <span>Question Navigator</span>
+                        <span class="badge badge-pill badge-soft-purple" style="font-size: 0.75rem;">
+                            <span id="answeredCountDisplay">0</span> / <span th:text="${totalQuestions}">10</span> Answered
+                        </span>
+                    </h6>
+
+                    <!-- Progress Bar -->
+                    <div class="progress mb-3" style="height: 6px; border-radius: 10px; background-color: var(--light-lavender);">
+                        <div id="examProgressBar" class="progress-bar" role="progressbar" style="width: 0%; background-color: var(--primary-purple);" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                    <!-- Question Grid -->
+                    <div class="palette-grid">
+                        <button type="button" th:each="q, iter : ${questions}"
+                                class="palette-btn"
+                                th:data-index="${iter.index}"
+                                th:text="${iter.count}">1</button>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="d-flex justify-content-around align-items-center small text-secondary pt-3 border-top" style="border-color: var(--border-color) !important;">
+                        <div class="d-flex align-items-center gap-2">
+                            <span style="width: 14px; height: 14px; border-radius: 4px; background-color: var(--lavender); border: 1.5px solid var(--primary-purple);"></span>
+                            <span>Answered</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span style="width: 14px; height: 14px; border-radius: 4px; background-color: #FAF9FD; border: 1.5px solid var(--border-color);"></span>
+                            <span>Unanswered</span>
+                        </div>
+                    </div>
+
+                    <!-- Final Submission Button -->
+                    <div class="mt-4 pt-2">
+                        <button type="button" class="btn btn-soft-mint w-100" data-bs-toggle="modal" data-bs-target="#submitConfirmModal">
+                            <i class="bi bi-check2-all"></i> Review & Submit Paper
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Confirmation Modal -->
+        <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="submitModalLabel">
+                            <i class="bi bi-send-check-fill text-purple"></i> Submit Examination
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <p class="text-dark mb-2">
+                            You have answered <strong id="modalAnsweredCount" class="text-purple">0</strong> of
+                            <strong th:text="${totalQuestions}">10</strong> questions.
+                        </p>
+                        <p class="text-secondary small mb-0">
+                            Once you submit, your answers will be permanently evaluated and your score will be generated immediately. Are you ready to proceed?
+                        </p>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Keep Working</button>
+                        <button type="submit" class="btn btn-primary-purple">
+                            <i class="bi bi-check-circle-fill"></i> Yes, Submit Final Answers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/exam-timer.js}"></script>
+<script th:src="@{/js/exam-navigation.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const examDuration = /*[[${durationMinutes}]]*/ 20;
+    const currentExamId = /*[[${exam.id}]]*/ 1;
+    initExamTimer(examDuration, currentExamId, 'examForm');
+    /*]]>*/
+</script>
+</body>
+</html>

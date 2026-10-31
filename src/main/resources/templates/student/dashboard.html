@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Online Examination System</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard', 'STUDENT')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Student Dashboard', 'Assessment status, upcoming tests & overall performance')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Stats Widgets Grid -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-purple">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Available Exams</span>
+                            <h2 class="fw-bold my-1" th:text="${availableCount}">0</h2>
+                            <span class="badge badge-pill badge-soft-purple"><i class="bi bi-clock"></i> Ready to Take</span>
+                        </div>
+                        <div class="icon-box icon-box-purple">
+                            <i class="bi bi-book-half"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-mint">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Completed Exams</span>
+                            <h2 class="fw-bold my-1" th:text="${completedCount}">0</h2>
+                            <span class="badge badge-pill badge-soft-mint"><i class="bi bi-check2-circle"></i> Submitted</span>
+                        </div>
+                        <div class="icon-box icon-box-mint">
+                            <i class="bi bi-award-fill"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-blue">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Upcoming Tests</span>
+                            <h2 class="fw-bold my-1" th:text="${upcomingCount}">0</h2>
+                            <span class="badge badge-pill badge-soft-blue"><i class="bi bi-calendar-check"></i> Scheduled</span>
+                        </div>
+                        <div class="icon-box icon-box-blue">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6">
+                    <div class="stat-card stat-card-yellow">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Average Score</span>
+                            <h2 class="fw-bold my-1" th:text="${avgPercentage + '%'}">0%</h2>
+                            <span class="badge badge-pill badge-soft-yellow"><i class="bi bi-graph-up"></i> Performance</span>
+                        </div>
+                        <div class="icon-box icon-box-yellow">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Exams Section -->
+            <div class="card-custom mb-4">
+                <div class="card-header-custom">
+                    <div>
+                        <h5 class="fw-bold mb-0">Available Examinations</h5>
+                        <span class="small text-secondary">Assessments open for your attempt</span>
+                    </div>
+                    <a th:href="@{/student/exams}" class="btn btn-outline-purple btn-sm">View All</a>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row g-4">
+                        <div class="col-md-6" th:each="exam : ${availableExams}">
+                            <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between" style="background-color: #FAF9FE; border-color: #E6DEF7;">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                                        <span class="small text-secondary"><i class="bi bi-clock"></i> <strong th:text="${exam.duration + ' mins'}">30 mins</strong></span>
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-2" th:text="${exam.title}">Exam Title</h5>
+                                    <p class="text-secondary small mb-3" th:text="${#strings.abbreviate(exam.description, 90)}">Description...</p>
+                                    <div class="d-flex gap-3 small text-muted mb-3">
+                                        <span><i class="bi bi-person-badge"></i> <span th:text="${exam.teacher.name}">Teacher</span></span>
+                                        <span><i class="bi bi-award"></i> <span th:text="${exam.totalMarks + ' Marks'}">10 Marks</span></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <!-- If already attempted, show View Result; else Take Exam -->
+                                    <div th:if="${attemptedMap != null && attemptedMap.containsKey(exam.id)}">
+                                        <a th:href="@{'/student/results/' + ${attemptedMap.get(exam.id).id}}" class="btn btn-soft-mint w-100">
+                                            <i class="bi bi-check-circle-fill"></i> Completed - View Result (<span th:text="${attemptedMap.get(exam.id).score + '/' + exam.totalMarks}">0/10</span>)
+                                        </a>
+                                    </div>
+                                    <div th:unless="${attemptedMap != null && attemptedMap.containsKey(exam.id)}">
+                                        <a th:href="@{'/student/exams/' + ${exam.id} + '/instructions'}" class="btn btn-primary-purple w-100">
+                                            <i class="bi bi-pencil-square"></i> Take Examination
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12" th:if="${#lists.isEmpty(availableExams)}">
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-check-all fs-2 d-block mb-2"></i>
+                                No examinations available at this moment.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Completed Submissions -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <div>
+                        <h5 class="fw-bold mb-0">Recent Examination Results</h5>
+                        <span class="small text-secondary">Your latest graded attempts</span>
+                    </div>
+                    <a th:href="@{/student/history}" class="btn btn-outline-purple btn-sm">Full History</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Exam Title</th>
+                                <th>Subject</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Result</th>
+                                <th>Submitted Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sub : ${recentSubmissions}">
+                                <td class="fw-bold text-dark" th:text="${sub.exam.title}">Java OOP Exam</td>
+                                <td>
+                                    <span class="badge badge-pill badge-soft-purple" th:text="${sub.exam.subject.subjectName}">Subject</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark" th:text="${sub.score + ' / ' + sub.exam.totalMarks}">9 / 10</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" th:text="${sub.percentage + '%'}">90%</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill"
+                                          th:classappend="${sub.passed ? 'badge-soft-mint' : 'badge-soft-pink'}"
+                                          th:text="${sub.passed ? 'PASSED' : 'FAILED'}">PASSED</span>
+                                </td>
+                                <td class="small text-secondary" th:text="${#temporals.format(sub.submittedAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+                                <td class="text-end">
+                                    <a th:href="@{'/student/results/' + ${sub.id}}" class="btn btn-soft-purple btn-sm">
+                                        <i class="bi bi-eye"></i> View Result
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(recentSubmissions)}">
+                                <td colspan="7" class="text-center py-4 text-muted">You have not completed any examinations yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Examination - Teacher Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('create-exam', 'TEACHER')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Create Examination', 'Define test parameters, syllabus & scheduling')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card-custom p-4">
+                        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom" style="border-color: var(--border-color) !important;">
+                            <div class="icon-box icon-box-purple">
+                                <i class="bi bi-file-earmark-plus"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark">Examination Details</h5>
+                                <span class="small text-secondary">Step 1: Configure basic test information and duration</span>
+                            </div>
+                        </div>
+
+                        <form th:action="@{/teacher/exams/create}" th:object="${examDto}" method="post">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Examination Title <span class="text-danger">*</span></label>
+                                <input type="text" id="title" th:field="*{title}" class="form-control"
+                                       placeholder="e.g. Java Mid-Term Certification Exam" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="subjectId" class="form-label">Curriculum Subject <span class="text-danger">*</span></label>
+                                    <select id="subjectId" th:field="*{subjectId}" class="form-select" required>
+                                        <option value="">-- Choose Subject --</option>
+                                        <option th:each="sub : ${subjects}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
+                                    </select>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('subjectId')}" th:errors="*{subjectId}"></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="duration" class="form-label">Duration (Mins) <span class="text-danger">*</span></label>
+                                    <input type="number" id="duration" th:field="*{duration}" class="form-control" min="1" max="360" required>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="totalMarks" class="form-label">Total Marks <span class="text-danger">*</span></label>
+                                    <input type="number" id="totalMarks" th:field="*{totalMarks}" class="form-control" min="1" required>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('totalMarks')}" th:errors="*{totalMarks}"></div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="startTime" class="form-label">Start Date & Time (Optional)</label>
+                                    <input type="datetime-local" id="startTime" th:field="*{startTime}" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="endTime" class="form-label">End Date & Time (Optional)</label>
+                                    <input type="datetime-local" id="endTime" th:field="*{endTime}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Initial Status</label>
+                                <select id="status" th:field="*{status}" class="form-select">
+                                    <option value="PUBLISHED">PUBLISHED (Students can see & attend)</option>
+                                    <option value="DRAFT">DRAFT (Hidden until questions are ready)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Instructions & Syllabus Description</label>
+                                <textarea id="description" th:field="*{description}" class="form-control" rows="4"
+                                          placeholder="Specify topics covered, rules, passing requirements, etc."></textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top" style="border-color: var(--border-color) !important;">
+                                <a th:href="@{/teacher/exams}" class="btn btn-outline-purple">Cancel</a>
+                                <button type="submit" class="btn btn-primary-purple">
+                                    Save & Proceed to Questions <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

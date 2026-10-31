@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examination History - Student Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('history', 'STUDENT')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Examination History', 'Archive of all completed assessments & performance logs')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- History Table Card -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <div>
+                        <h5 class="fw-bold mb-0">My Assessment Attempts</h5>
+                        <span class="small text-secondary" th:text="${#lists.size(submissions) + ' completed examinations'}">0 completed</span>
+                    </div>
+                    <a th:href="@{/student/exams}" class="btn btn-primary-purple btn-sm">
+                        <i class="bi bi-book"></i> Take Another Exam
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Exam Details</th>
+                                <th>Subject</th>
+                                <th>Score Obtained</th>
+                                <th>Percentage</th>
+                                <th>Result</th>
+                                <th>Completion Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sub : ${submissions}">
+                                <td>
+                                    <div class="fw-bold text-dark" th:text="${sub.exam.title}">Java Programming Assessment</div>
+                                    <small class="text-muted" th:text="${'Teacher: ' + sub.exam.teacher.name}">Teacher</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill badge-soft-purple" th:text="${sub.exam.subject.subjectName}">Subject</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark" th:text="${sub.score + ' / ' + sub.exam.totalMarks}">9 / 10</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" th:text="${sub.percentage + '%'}">90%</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill"
+                                          th:classappend="${sub.passed ? 'badge-soft-mint' : 'badge-soft-pink'}"
+                                          th:text="${sub.passed ? 'PASSED' : 'FAILED'}">PASSED</span>
+                                </td>
+                                <td class="small text-secondary"
+                                    th:text="${#temporals.format(sub.submittedAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+                                <td class="text-end">
+                                    <a th:href="@{'/student/results/' + ${sub.id}}" class="btn btn-soft-purple btn-sm">
+                                        <i class="bi bi-eye"></i> View Result Paper
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(submissions)}">
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-journal-check fs-2 d-block mb-2"></i>
+                                    You have not attempted any examinations yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

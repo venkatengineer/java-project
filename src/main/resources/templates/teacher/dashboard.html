@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Online Examination System</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard', 'TEACHER')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Faculty Dashboard', 'Instructor controls, assessment authoring & candidate tracking')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Stats Widgets Grid -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-4 col-sm-6">
+                    <div class="stat-card stat-card-purple">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Examinations Created</span>
+                            <h2 class="fw-bold my-1" th:text="${totalExams}">0</h2>
+                            <span class="badge badge-pill badge-soft-purple"><i class="bi bi-journal-text"></i> My Exams</span>
+                        </div>
+                        <div class="icon-box icon-box-purple">
+                            <i class="bi bi-journal-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6">
+                    <div class="stat-card stat-card-mint">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Total Questions</span>
+                            <h2 class="fw-bold my-1" th:text="${totalQuestions}">0</h2>
+                            <span class="badge badge-pill badge-soft-mint"><i class="bi bi-patch-question"></i> Authored</span>
+                        </div>
+                        <div class="icon-box icon-box-mint">
+                            <i class="bi bi-question-diamond"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6">
+                    <div class="stat-card stat-card-blue">
+                        <div>
+                            <span class="text-secondary small fw-bold text-uppercase">Student Submissions</span>
+                            <h2 class="fw-bold my-1" th:text="${totalSubmissions}">0</h2>
+                            <span class="badge badge-pill badge-soft-blue"><i class="bi bi-people"></i> Evaluated</span>
+                        </div>
+                        <div class="icon-box icon-box-blue">
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Banner -->
+            <div class="card-custom mb-4 p-4" style="background: linear-gradient(135deg, #FAF8FE 0%, #F5F0FC 100%); border-color: #E2DAF5;">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark">Ready to organize a new test?</h5>
+                        <p class="small text-secondary mb-0">Set up customized multiple-choice tests with timers, automated grading, and question banks.</p>
+                    </div>
+                    <a th:href="@{/teacher/exams/create}" class="btn btn-primary-purple">
+                        <i class="bi bi-plus-circle-fill"></i> Create New Examination
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tables Row -->
+            <div class="row g-4">
+                <!-- My Examinations -->
+                <div class="col-lg-7">
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <div>
+                                <h5 class="fw-bold mb-0">My Examinations</h5>
+                                <span class="small text-secondary">Tests created by you</span>
+                            </div>
+                            <a th:href="@{/teacher/exams}" class="btn btn-outline-purple btn-sm">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Subject</th>
+                                        <th>Duration</th>
+                                        <th>Questions</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="exam : ${myExams}">
+                                        <td class="fw-bold text-dark" th:text="${exam.title}">Exam Title</td>
+                                        <td>
+                                            <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                                        </td>
+                                        <td><span th:text="${exam.duration}">20</span> mins</td>
+                                        <td>
+                                            <span class="badge badge-pill badge-soft-blue"
+                                                  th:text="${(exam.questions != null ? #lists.size(exam.questions) : 0) + ' Qs'}">0 Qs</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{'/teacher/exams/' + ${exam.id} + '/questions'}" class="btn btn-soft-purple btn-sm py-1 px-2">
+                                                <i class="bi bi-gear"></i> Questions
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(myExams)}">
+                                        <td colspan="5" class="text-center py-4 text-muted">No examinations created yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Student Submissions -->
+                <div class="col-lg-5">
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <div>
+                                <h5 class="fw-bold mb-0">Recent Candidate Submissions</h5>
+                                <span class="small text-secondary">Latest test takers</span>
+                            </div>
+                            <a th:href="@{/teacher/submissions}" class="btn btn-outline-purple btn-sm">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Score</th>
+                                        <th>Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="sub : ${recentSubmissions}">
+                                        <td>
+                                            <div class="fw-bold small text-dark" th:text="${sub.student.name}">Student Name</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;" th:text="${sub.exam.title}">Exam</div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold small" th:text="${sub.score + ' / ' + sub.exam.totalMarks}">8 / 10</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill"
+                                                  th:classappend="${sub.passed ? 'badge-soft-mint' : 'badge-soft-pink'}"
+                                                  th:text="${sub.passed ? 'PASS' : 'FAIL'}">PASS</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(recentSubmissions)}">
+                                        <td colspan="3" class="text-center py-4 text-muted">No student submissions yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Submissions - Teacher Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('submissions', 'TEACHER')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Student Submissions', 'Candidate attempts, grading & test results for your exams')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Submissions Table Card -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <div>
+                        <h5 class="fw-bold mb-0">Candidate Submissions</h5>
+                        <span class="small text-secondary" th:text="${#lists.size(submissions) + ' submissions across your examinations'}">0 submissions</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Examination</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Result</th>
+                                <th>Submitted At</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sub : ${submissions}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="user-avatar-initials" style="width: 32px; height: 32px; font-size: 0.8rem;"
+                                             th:text="${#strings.substring(sub.student.name, 0, 1)}">S</div>
+                                        <div>
+                                            <div class="fw-bold text-dark small" th:text="${sub.student.name}">Student Name</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;" th:text="${sub.student.email}">email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark small" th:text="${sub.exam.title}">Exam Title</div>
+                                    <span class="badge badge-pill badge-soft-purple" th:text="${sub.exam.subject.subjectName}">Subject</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark" th:text="${sub.score + ' / ' + sub.exam.totalMarks}">0 / 10</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" th:text="${sub.percentage + '%'}">0%</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill"
+                                          th:classappend="${sub.passed ? 'badge-soft-mint' : 'badge-soft-pink'}"
+                                          th:text="${sub.passed ? 'PASSED' : 'FAILED'}">PASSED</span>
+                                </td>
+                                <td class="small text-secondary"
+                                    th:text="${#temporals.format(sub.submittedAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+                                <td class="text-end">
+                                    <a th:href="@{'/teacher/submissions/' + ${sub.id}}" class="btn btn-soft-purple btn-sm">
+                                        <i class="bi bi-eye"></i> View Paper
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(submissions)}">
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-clipboard-x fs-2 d-block mb-2"></i>
+                                    No student submissions recorded yet for your examinations.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

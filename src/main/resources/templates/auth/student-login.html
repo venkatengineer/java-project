@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - Online Examination System</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-header">
+        <a href="/" class="auth-logo text-decoration-none">
+            <i class="bi bi-mortarboard-fill"></i>
+        </a>
+        <h3>Student Portal</h3>
+        <p class="text-secondary small">Sign in to take scheduled examinations and view test results</p>
+    </div>
+
+    <!-- Role Switcher Tabs -->
+    <div class="auth-role-tabs">
+        <a th:href="@{/login/student}" class="auth-role-tab active">
+            <i class="bi bi-mortarboard"></i> Student
+        </a>
+        <a th:href="@{/login/teacher}" class="auth-role-tab">
+            <i class="bi bi-person-workspace"></i> Teacher
+        </a>
+        <a th:href="@{/login/admin}" class="auth-role-tab">
+            <i class="bi bi-shield-check"></i> Admin
+        </a>
+    </div>
+
+    <!-- Alerts -->
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <div class="auth-card">
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Student Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--border-color); border-radius: var(--radius-md) 0 0 var(--radius-md);">
+                        <i class="bi bi-envelope text-muted"></i>
+                    </span>
+                    <input type="email" class="form-control border-start-0 ps-0" id="email" name="email"
+                           placeholder="alice.student@exam.com" value="alice.student@exam.com" required autofocus>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="password" class="form-label mb-0">Password</label>
+                </div>
+                <div class="password-input-group">
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Enter your password" value="student123" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember-me" name="remember-me" checked>
+                    <label class="form-check-label small text-secondary" for="remember-me">
+                        Remember this device
+                    </label>
+                </div>
+                <a th:href="@{/register/student}" class="small text-decoration-none" style="color: var(--deep-purple); font-weight: 600;">
+                    New student? Register
+                </a>
+            </div>
+
+            <button type="submit" class="btn btn-primary-purple w-100 py-2 mb-3">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In to Student Portal
+            </button>
+        </form>
+
+        <div class="demo-credentials-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-info-circle-fill text-primary"></i>
+                <strong>Pre-configured Demo Credentials:</strong>
+            </div>
+            <div>Email: <code onclick="navigator.clipboard.writeText('alice.student@exam.com')">alice.student@exam.com</code></div>
+            <div>Password: <code onclick="navigator.clipboard.writeText('student123')">student123</code></div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="/" class="small text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Return to Homepage
+        </a>
+    </div>
+</div>
+
+<script th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

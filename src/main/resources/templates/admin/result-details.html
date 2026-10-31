@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Details - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/examination.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('results', 'ADMIN')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Submission Evaluation Details', 'Comprehensive question-by-question candidate analysis')}"></div>
+
+        <div class="app-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a th:href="@{/admin/results}" class="btn btn-outline-purple btn-sm">
+                    <i class="bi bi-arrow-left"></i> Back to All Results
+                </a>
+                <span class="badge badge-pill badge-soft-purple fs-6"
+                      th:text="'Attempt ID: #' + ${submission.id}">Attempt #1</span>
+            </div>
+
+            <!-- Score Summary Card -->
+            <div class="card-custom mb-4 p-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-7">
+                        <span class="badge badge-pill badge-soft-purple mb-2" th:text="${submission.exam.subject.subjectName}">Subject</span>
+                        <h3 class="fw-bold mb-1" th:text="${submission.exam.title}">Exam Title</h3>
+                        <p class="text-secondary small mb-3">
+                            Candidate: <strong class="text-dark" th:text="${submission.student.name}">Student Name</strong>
+                            (<span th:text="${submission.student.email}">email</span>)
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap small">
+                            <div><i class="bi bi-person-badge text-muted"></i> Examiner: <span class="fw-semibold" th:text="${submission.exam.teacher.name}">Teacher</span></div>
+                            <div><i class="bi bi-calendar3 text-muted"></i> Date: <span class="fw-semibold" th:text="${#temporals.format(submission.submittedAt, 'dd MMM yyyy, HH:mm')}">Date</span></div>
+                            <div><i class="bi bi-clock text-muted"></i> Duration: <span class="fw-semibold" th:text="${submission.exam.duration + ' mins'}">30 mins</span></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-md-end">
+                        <div class="d-inline-block text-center p-3 rounded-4" style="background-color: var(--light-lavender); min-width: 180px;">
+                            <div class="fs-1 fw-bold text-dark" style="color: var(--deep-purple) !important;"
+                                 th:text="${submission.score + ' / ' + submission.exam.totalMarks}">0 / 10</div>
+                            <div class="fw-semibold text-secondary mb-2" th:text="${submission.percentage + '% Score'}">0% Score</div>
+                            <span class="badge badge-pill fs-6"
+                                  th:classappend="${submission.passed ? 'badge-soft-mint' : 'badge-soft-pink'}"
+                                  th:text="${submission.passed ? 'PASSED' : 'FAILED'}">PASSED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Question-by-Question Breakdown -->
+            <h5 class="fw-bold mb-3">Question-by-Question Breakdown</h5>
+            <div class="review-question-card"
+                 th:each="ans, iter : ${answers}"
+                 th:classappend="${ans.correct ? 'status-correct' : (ans.selectedAnswer == null ? 'status-skipped' : 'status-incorrect')}">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark" th:text="'Question ' + ${iter.count}">Question 1</span>
+                    <div>
+                        <span th:if="${ans.correct}" class="badge badge-pill badge-soft-mint">
+                            <i class="bi bi-check-circle-fill"></i> Correct (+<span th:text="${ans.question.marks}">1</span> mark)
+                        </span>
+                        <span th:if="${!ans.correct && ans.selectedAnswer != null}" class="badge badge-pill badge-soft-pink">
+                            <i class="bi bi-x-circle-fill"></i> Incorrect (0 marks)
+                        </span>
+                        <span th:if="${ans.selectedAnswer == null}" class="badge badge-pill badge-soft-yellow">
+                            <i class="bi bi-dash-circle-fill"></i> Skipped (0 marks)
+                        </span>
+                    </div>
+                </div>
+
+                <p class="fw-semibold text-dark mb-3" th:text="${ans.question.questionText}">Question text</p>
+
+                <div class="row g-2 small mb-3">
+                    <div class="col-sm-6">
+                        <div class="p-2 rounded-3 border"
+                             th:style="${ans.question.correctAnswer == 'A' ? 'background-color: #E5F3EC; border-color: #85CBA4 !important;' : (ans.selectedAnswer == 'A' ? 'background-color: #F8E8F1; border-color: #E89BBF !important;' : 'background-color: #FAF9FE;')}">
+                            <strong>A.</strong> <span th:text="${ans.question.optionA}">Option A</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2 rounded-3 border"
+                             th:style="${ans.question.correctAnswer == 'B' ? 'background-color: #E5F3EC; border-color: #85CBA4 !important;' : (ans.selectedAnswer == 'B' ? 'background-color: #F8E8F1; border-color: #E89BBF !important;' : 'background-color: #FAF9FE;')}">
+                            <strong>B.</strong> <span th:text="${ans.question.optionB}">Option B</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2 rounded-3 border"
+                             th:style="${ans.question.correctAnswer == 'C' ? 'background-color: #E5F3EC; border-color: #85CBA4 !important;' : (ans.selectedAnswer == 'C' ? 'background-color: #F8E8F1; border-color: #E89BBF !important;' : 'background-color: #FAF9FE;')}">
+                            <strong>C.</strong> <span th:text="${ans.question.optionC}">Option C</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2 rounded-3 border"
+                             th:style="${ans.question.correctAnswer == 'D' ? 'background-color: #E5F3EC; border-color: #85CBA4 !important;' : (ans.selectedAnswer == 'D' ? 'background-color: #F8E8F1; border-color: #E89BBF !important;' : 'background-color: #FAF9FE;')}">
+                            <strong>D.</strong> <span th:text="${ans.question.optionD}">Option D</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2 bg-light rounded-3 small text-secondary d-flex gap-3">
+                    <div>Selected Answer: <strong class="text-dark" th:text="${ans.selectedAnswer != null ? ans.selectedAnswer : 'None (Skipped)'}">A</strong></div>
+                    <div>Correct Answer: <strong class="text-success" th:text="${ans.question.correctAnswer}">B</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Examination System - Modern Assessment Platform</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="background: radial-gradient(circle at 10% 15%, #F4F0FC 0%, #FAF8FE 45%, #F8F7FC 100%); min-height: 100vh;">
+
+<!-- Landing Header -->
+<nav class="navbar navbar-expand-lg bg-white border-bottom py-3 sticky-top" style="border-color: var(--border-color) !important;">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark" href="/">
+            <div class="brand-logo-icon" style="width: 36px; height: 36px; font-size: 1.15rem;">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <span>EvalPro Exam</span>
+        </a>
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/login/student}" class="btn btn-outline-purple btn-sm">Student Login</a>
+            <a th:href="@{/login/teacher}" class="btn btn-soft-purple btn-sm">Teacher Login</a>
+            <a th:href="@{/login/admin}" class="btn btn-primary-purple btn-sm">Admin Portal</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<div class="container py-5">
+    <div class="row justify-content-center text-center pt-4 pb-5">
+        <div class="col-lg-8">
+            <span class="badge-pill badge-soft-purple mb-3">
+                <i class="bi bi-stars"></i> Academic Full-Stack Java Project
+            </span>
+            <h1 class="display-5 fw-bold mb-3" style="color: var(--text-main);">
+                Intelligent, Calming & Modern <br>
+                <span style="color: var(--deep-purple);">Online Examination Platform</span>
+            </h1>
+            <p class="lead text-secondary mb-4">
+                A full-stack Spring Boot, Thymeleaf, and MySQL application featuring role-based portals, timed MCQ assessments, instant automated evaluation, and rich performance analytics.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a th:href="@{/login/student}" class="btn btn-primary-purple px-4 py-2">
+                    <i class="bi bi-play-circle-fill"></i> Enter Student Portal
+                </a>
+                <a th:href="@{/register/student}" class="btn btn-soft-purple px-4 py-2">
+                    <i class="bi bi-person-plus-fill"></i> Student Self-Register
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Portals Grid -->
+    <div class="row g-4 mb-5">
+        <!-- Student Card -->
+        <div class="col-md-4">
+            <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between" style="background-color: #FAF8FE; border-color: #E2DAF5;">
+                <div>
+                    <div class="icon-box icon-box-purple mb-3">
+                        <i class="bi bi-mortarboard"></i>
+                    </div>
+                    <span class="badge-pill badge-soft-purple mb-2">Student Portal</span>
+                    <h4 class="fw-bold mb-2">Student Experience</h4>
+                    <p class="text-secondary small mb-4">
+                        Take available examinations in a distraction-free interface with live countdown timers, question navigation palette, instant scoring, and comprehensive answer reviews.
+                    </p>
+                </div>
+                <div>
+                    <div class="p-3 bg-white rounded-3 border mb-3 small" style="border-color: var(--border-color) !important;">
+                        <span class="text-muted d-block mb-1">Demo Student Account:</span>
+                        <code>alice.student@exam.com</code> / <code>student123</code>
+                    </div>
+                    <a th:href="@{/login/student}" class="btn btn-primary-purple w-100">
+                        Launch Student Portal <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Card -->
+        <div class="col-md-4">
+            <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between" style="background-color: #F6FCF8; border-color: #DBEFE4;">
+                <div>
+                    <div class="icon-box icon-box-mint mb-3">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <span class="badge-pill badge-soft-mint mb-2">Teacher Portal</span>
+                    <h4 class="fw-bold mb-2">Faculty & Instructor</h4>
+                    <p class="text-secondary small mb-4">
+                        Create and schedule custom examinations, design rich multiple-choice questions with customized marks, track student submissions, and review assessment metrics.
+                    </p>
+                </div>
+                <div>
+                    <div class="p-3 bg-white rounded-3 border mb-3 small" style="border-color: var(--border-color) !important;">
+                        <span class="text-muted d-block mb-1">Demo Teacher Account:</span>
+                        <code>sarah.teacher@exam.com</code> / <code>teacher123</code>
+                    </div>
+                    <a th:href="@{/login/teacher}" class="btn btn-soft-mint w-100">
+                        Launch Teacher Portal <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Card -->
+        <div class="col-md-4">
+            <div class="card-custom h-100 p-4 d-flex flex-column justify-content-between" style="background-color: #F7FAFE; border-color: #DEE8F8;">
+                <div>
+                    <div class="icon-box icon-box-blue mb-3">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <span class="badge-pill badge-soft-blue mb-2">Admin Portal</span>
+                    <h4 class="fw-bold mb-2">System Administrator</h4>
+                    <p class="text-secondary small mb-4">
+                        Complete administration: manage student & teacher registries, curriculum subjects, system examinations, global submission statistics, and secure user management.
+                    </p>
+                </div>
+                <div>
+                    <div class="p-3 bg-white rounded-3 border mb-3 small" style="border-color: var(--border-color) !important;">
+                        <span class="text-muted d-block mb-1">Demo Administrator Account:</span>
+                        <code>admin@exam.com</code> / <code>admin123</code>
+                    </div>
+                    <a th:href="@{/login/admin}" class="btn btn-outline-purple w-100">
+                        Launch Admin Portal <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Overview -->
+    <div class="card-custom p-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="badge-pill badge-soft-yellow mb-2"><i class="bi bi-check2-circle"></i> Complete Architecture</span>
+                <h3 class="fw-bold mb-3">Engineered for Academic Excellence & Production-Grade Structure</h3>
+                <p class="text-secondary mb-4">
+                    Strict adherence to Spring MVC pattern with Service-Repository architecture, server-side validation, secure BCrypt password hashing, session management, and JPA entity relationships.
+                </p>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-shield-check text-success fs-5"></i>
+                            <span class="fw-semibold small">Spring Security 6</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-database-check text-primary fs-5"></i>
+                            <span class="fw-semibold small">MySQL 8 Relational DB</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-stopwatch text-danger fs-5"></i>
+                            <span class="fw-semibold small">Interactive Live Timer</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-palette text-purple fs-5"></i>
+                            <span class="fw-semibold small">Modern Pastel UI/UX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 rounded-4" style="background-color: var(--light-lavender); border: 1.5px solid var(--lavender);">
+                    <h6 class="fw-bold mb-3 text-dark">Pre-seeded Test Accounts:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless small mb-0">
+                            <thead>
+                                <tr class="text-secondary">
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-pill badge-soft-purple">ADMIN</span></td>
+                                    <td><code>admin@exam.com</code></td>
+                                    <td><code>admin123</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-pill badge-soft-mint">TEACHER</span></td>
+                                    <td><code>sarah.teacher@exam.com</code></td>
+                                    <td><code>teacher123</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-pill badge-soft-blue">STUDENT</span></td>
+                                    <td><code>alice.student@exam.com</code></td>
+                                    <td><code>student123</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="py-4 text-center text-secondary small border-top bg-white mt-5" style="border-color: var(--border-color) !important;">
+    <div class="container">
+        &copy; 2026 Online Examination System. All rights reserved. Built with Java 21, Spring Boot 3, Thymeleaf & MySQL.
+    </div>
+</footer>
+
+<script th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Alert Fragment -->
+<div th:fragment="alerts">
+    <div th:if="${successMessage}" class="alert alert-dismissible fade show d-flex align-items-center gap-2 mb-4"
+         style="background-color: var(--soft-mint); border: 1.5px solid #C4E5D4; color: var(--soft-mint-dark); border-radius: var(--radius-md);" role="alert">
+        <i class="bi bi-check-circle-fill fs-5"></i>
+        <div class="flex-grow-1" th:text="${successMessage}">Operation completed successfully!</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-dismissible fade show d-flex align-items-center gap-2 mb-4"
+         style="background-color: var(--soft-pink); border: 1.5px solid #F5CADF; color: var(--soft-pink-dark); border-radius: var(--radius-md);" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+        <div class="flex-grow-1" th:text="${errorMessage}">An error occurred. Please check your inputs.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${param.accessDenied}" class="alert alert-dismissible fade show d-flex align-items-center gap-2 mb-4"
+         style="background-color: var(--soft-yellow); border: 1.5px solid #F8E4B0; color: var(--soft-yellow-dark); border-radius: var(--radius-md);" role="alert">
+        <i class="bi bi-shield-lock-fill fs-5"></i>
+        <div class="flex-grow-1">Access restricted. You do not have permission to view that page.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+
+</body>
+</html>

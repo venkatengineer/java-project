@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile - Settings</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('profile', 'STUDENT')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Student Profile', 'Manage personal information & security credentials')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <div class="row g-4">
+                <!-- Profile Information -->
+                <div class="col-lg-6">
+                    <div class="card-custom h-100 p-4">
+                        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom" style="border-color: var(--border-color) !important;">
+                            <div class="user-avatar-initials" style="width: 56px; height: 56px; font-size: 1.5rem; background-color: var(--soft-blue); color: var(--soft-blue-dark);"
+                                 th:text="${#strings.substring(user.name, 0, 1)}">S</div>
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark" th:text="${user.name}">Student Name</h5>
+                                <span class="badge badge-pill badge-soft-blue">STUDENT</span>
+                            </div>
+                        </div>
+
+                        <form th:action="@{/student/profile/update}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="name" class="form-control" th:value="${user.name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" name="email" class="form-control" th:value="${user.email}" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Enrollment Date</label>
+                                <input type="text" class="form-control" disabled th:value="${#temporals.format(user.createdAt, 'dd MMM yyyy, HH:mm')}">
+                            </div>
+                            <button type="submit" class="btn btn-primary-purple">
+                                <i class="bi bi-check-circle"></i> Save Profile Details
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="col-lg-6">
+                    <div class="card-custom h-100 p-4">
+                        <h5 class="fw-bold mb-1 text-dark">Change Password</h5>
+                        <p class="small text-secondary mb-4">Ensure your student portal credentials remain secure.</p>
+
+                        <form th:action="@{/student/profile/password}" th:object="${passwordDto}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" name="currentPassword" class="form-control" required placeholder="Enter current password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">New Password</label>
+                                <input type="password" name="newPassword" class="form-control" required minlength="6" placeholder="At least 6 characters">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" name="confirmPassword" class="form-control" required minlength="6" placeholder="Re-type new password">
+                            </div>
+                            <button type="submit" class="btn btn-outline-purple">
+                                <i class="bi bi-shield-lock"></i> Update Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Examinations - Admin Portal</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar('exams', 'ADMIN')}"></div>
+
+    <div class="app-main">
+        <!-- Topbar Fragment -->
+        <div th:replace="~{fragments/header :: header('Examinations Management', 'Master catalog of all system tests and assessments')}"></div>
+
+        <div class="app-content">
+            <!-- Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Toolbar -->
+            <div class="card-custom mb-4 p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <form th:action="@{/admin/exams}" method="get" class="d-flex gap-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0" style="border-color: var(--border-color); border-radius: var(--radius-md) 0 0 var(--radius-md);">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" name="search" class="form-control border-start-0 ps-0"
+                                       placeholder="Search exam title or subject..." th:value="${searchQuery}">
+                            </div>
+                            <button type="submit" class="btn btn-outline-purple">Search</button>
+                            <a th:if="${searchQuery != null and !searchQuery.isEmpty()}" th:href="@{/admin/exams}" class="btn btn-outline-purple">Reset</a>
+                        </form>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <span class="badge badge-pill badge-soft-purple fs-6" th:text="${#lists.size(exams) + ' Total Exams'}">0 Total Exams</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examinations Table -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h5 class="fw-bold mb-0">All System Examinations</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Exam Details</th>
+                                <th>Subject</th>
+                                <th>Created By</th>
+                                <th>Duration</th>
+                                <th>Marks</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="exam : ${exams}">
+                                <td>
+                                    <div class="fw-bold text-dark" th:text="${exam.title}">Exam Title</div>
+                                    <small class="text-secondary" th:text="${#strings.abbreviate(exam.description, 60)}">Description</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill badge-soft-purple" th:text="${exam.subject.subjectName}">Subject</span>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold text-dark" th:text="${exam.teacher.name}">Teacher Name</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;" th:text="${exam.teacher.email}">email</div>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold" th:text="${exam.duration + ' mins'}">30 mins</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark" th:text="${exam.totalMarks}">10</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-pill"
+                                          th:classappend="${exam.status == 'PUBLISHED' ? 'badge-soft-mint' : 'badge-soft-yellow'}"
+                                          th:text="${exam.status}">PUBLISHED</span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-soft-danger btn-sm"
+                                            data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                            th:data-action-url="'/admin/exams/delete/' + ${exam.id}"
+                                            th:data-item-name="${exam.title}">
+                                        <i class="bi bi-trash3"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(exams)}">
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-card-checklist fs-2 d-block mb-2"></i>
+                                    No examinations found in the system.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

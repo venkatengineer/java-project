@@ -1,0 +1,134 @@
+/* ==========================================================================
+   AUTHENTICATION STYLESHEET
+   Clean, Modern Pastel Auth Pages
+   ========================================================================== */
+
+.auth-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at 10% 20%, #F5F1FD 0%, #FAF8FE 40%, #F8F7FC 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 1.25rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--deep-purple) 100%);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 8px 24px rgba(105, 85, 168, 0.25);
+    margin-bottom: 1rem;
+}
+
+.auth-header h3 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin-bottom: 0.35rem;
+    color: var(--text-main);
+}
+
+.auth-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 10px 35px rgba(105, 85, 168, 0.08);
+    padding: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-role-tabs {
+    display: flex;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+    padding: 0.35rem;
+    margin-bottom: 1.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.auth-role-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.auth-role-tab:hover {
+    color: var(--deep-purple);
+}
+
+.auth-role-tab.active {
+    background-color: #FFFFFF;
+    color: var(--deep-purple);
+    box-shadow: 0 2px 8px rgba(105, 85, 168, 0.12);
+}
+
+.password-input-group {
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-btn:hover {
+    color: var(--deep-purple);
+}
+
+.demo-credentials-card {
+    background-color: #FAF9FE;
+    border: 1px dashed #D6CBF4;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 0.825rem;
+}
+
+.demo-credentials-card strong {
+    color: var(--deep-purple);
+}
+
+.demo-credentials-card code {
+    background-color: var(--lavender);
+    color: var(--deep-purple);
+    padding: 0.15rem 0.4rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}

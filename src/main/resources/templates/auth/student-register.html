@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Online Examination System</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-header">
+        <a href="/" class="auth-logo text-decoration-none">
+            <i class="bi bi-person-plus-fill"></i>
+        </a>
+        <h3>Create Student Account</h3>
+        <p class="text-secondary small">Register now to attend online examinations and track your scores</p>
+    </div>
+
+    <!-- Alerts -->
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <div class="auth-card">
+        <form th:action="@{/register/student}" th:object="${userDto}" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--border-color); border-radius: var(--radius-md) 0 0 var(--radius-md);">
+                        <i class="bi bi-person text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="name" th:field="*{name}"
+                           placeholder="e.g. John Doe" required autofocus>
+                </div>
+                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--border-color); border-radius: var(--radius-md) 0 0 var(--radius-md);">
+                        <i class="bi bi-envelope text-muted"></i>
+                    </span>
+                    <input type="email" class="form-control border-start-0 ps-0" id="email" th:field="*{email}"
+                           placeholder="john.doe@example.com" required>
+                </div>
+                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-input-group">
+                    <input type="password" class="form-control" id="password" th:field="*{password}"
+                           placeholder="Create a strong password (min 6 characters)" required minlength="6">
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary-purple w-100 py-2 mb-3">
+                <i class="bi bi-check-circle"></i> Complete Student Registration
+            </button>
+        </form>
+
+        <div class="text-center mt-3 pt-3 border-top" style="border-color: var(--border-color) !important;">
+            <span class="text-secondary small">Already have an account? </span>
+            <a th:href="@{/login/student}" class="small fw-bold" style="color: var(--deep-purple);">Sign in here</a>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="/" class="small text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Return to Homepage
+        </a>
+    </div>
+</div>
+
+<script th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
